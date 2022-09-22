@@ -1,0 +1,62 @@
+#################################
+##  Configs for the Trainer    ##
+#################################
+trainer:
+  max_epochs: 400
+  save_top_k: 2
+  check_val_every_n_epoch: 1
+  pretrain_epochs: 0
+
+#################################
+##  Configs for the DataModule ##
+#################################
+data_module:
+  name: SalMSDataModule
+  args:
+    num_workers: 4
+    rgb_range: 1
+    train:
+      min_scale: 1
+      max_scale: 4
+      hr_path: load/SalCSSR-339/HR
+      sal_path: load/SalCSSR-339/Sal
+      data_length: 1600
+      data_cache: memory
+      data_first_k: 1000
+      lr_img_sz: 32
+      batch_size: 16
+      curriculum_learning: false
+    valid:
+      scales: [2, 3, 4]
+      data_path: load/benchmark/Google-15/HR
+      self_ensemble: false
+
+#######################################
+##  Configs for the LightningModule  ##
+#######################################
+lit_model:
+  name: SalCSSRModelBeta
+  args:
+    rgb_range: 1
+    loss_weights: [1, 0.1, 0.15]
+    valid:
+      no_crop_border: false
+      test_Y: false
+    network:
+      name: SalCSSRNetEpsilonFB
+      args: 
+        in_channels: 3
+        patch_size: 32
+        num_features: 64
+        num_modules: [4, 4, 4]
+        thresholds: [0, 0.25, 0.5]
+        threshold_p_multi: 10
+        upsampler: 
+          name: Multiscaleupsampler
+          args: 
+            n_feat: 64
+            split: 4
+    optimizer:
+      lr: 0.0001
+      lr_scheduler_milestones: [200, 400, 600, 800]
+      lr_scheduler_gamma: 0.5
