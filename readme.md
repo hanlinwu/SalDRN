@@ -1,6 +1,6 @@
 ## Lightweight Stepless Super-Resolution of Remote Sensing Images via Saliency-Aware Dynamic Routing Strategy
 
-by Hanlin Wu, Ning Ni, and Libao Zhang, details are in paper.
+by Hanlin Wu, Ning Ni, and Libao Zhang, details are in [paper](https://arxiv.org/abs/2110.15655).
 
 ## Usage
 
